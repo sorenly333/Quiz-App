@@ -1,0 +1,204 @@
+/* General reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fa;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: #4a90e2;
+    color: #fff;
+}
+
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    font-size: 1.1rem;
+}
+
+.grade-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    /* 4 boxes per row */
+    gap: 20px;
+    padding: 2rem;
+    flex: 1;
+}
+
+.grade {
+    display: flex;
+    flex-direction: column;
+    /* stack image above text */
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 1rem;
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    white-space: normal;
+    line-height: 1.4;
+}
+
+.grade3-container {
+    display: flex;
+    flex-direction: column;
+    /* stack vertically */
+    gap: 25px;
+    /* spacing between boxes */
+    padding: 2rem 10%;
+    /* some horizontal padding */
+    width: 100%;
+    /* full width */
+    margin: 2rem auto;
+    /* center vertically with spacing */
+}
+
+.grade3-container .grade {
+    padding: 2rem;
+    /* larger box padding */
+    font-size: 1.5rem;
+    /* bigger text */
+    min-height: 140px;
+    /* taller boxes */
+    border-radius: 14px;
+    width: 100%;
+    /* full container width */
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+    position: relative;
+
+    /* Background image optional */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.grade3-container .grade::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    /* overlay for text readability */
+    border-radius: 14px;
+}
+
+.grade3-container .grade span {
+    position: relative;
+    /* bring text above overlay */
+    z-index: 1;
+}
+
+
+.grade:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Unique colors for each grade */
+.grade-1 {
+    background: #FF9CEE;
+    /* Soft pink */
+}
+
+.grade-2 {
+    background: #A7C7E7;
+    /* Light blue */
+}
+
+.grade-3 {
+    background: #FF6B6B;
+}
+
+.grade-4 {
+    background: #FFB347;
+}
+
+.grade-5 {
+    background: #FFD93D;
+    /* color: #333; */
+}
+
+.grade-6 {
+    background: #6BCB77;
+}
+
+.grade-7 {
+    background: #4D96FF;
+}
+
+.grade-8 {
+    background: #843bff;
+}
+
+.grade-9 {
+    background: #ff66c4;
+}
+
+.grade-10 {
+    background: #00C9A7;
+}
+
+.grade-11 {
+    background: #FF8243;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background: #eee;
+    font-size: 0.9rem;
+}
+
+/* Individual backgrounds */
+.quiz1 {
+    background-image: url('math1.jpg');
+}
+
+.quiz2 {
+    background-image: url('math2.jpg');
+}
+
+.quiz3 {
+    background-image: url('science1.jpg');
+}
+
+.quiz4 {
+    background-image: url('english1.jpg');
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .grade-container {
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 boxes per row */
+    }
+}
+
+@media (max-width: 600px) {
+    .grade-container {
+        grid-template-columns: 1fr;
+        /* 1 box per row */
+    }
+}
