@@ -25,11 +25,26 @@ async function hashString(str) {
 // Initialize questions with hashed answers
 async function initQuestions() {
     const rawQuestions = [
-        { question: "Which of the following is a good example of a character?", choices: ["A Mountain", "A Dancing Robot", "A Green Background", "A Code Block"], answer: "A Dancing Robot" },
-        { question: "What is the first step when starting a story project in Scratch?", choices: ["Finish your quiz", "Choose a sprite and a backdrop", "Add sound", "Share your project"], answer: "Choose a sprite and a backdrop" },
-        { question: "Which of the following best describes a “plot”?", choices: ["A colorful costume", "The place where your story happens", "The beginning, middle, and end of your story", "A Scratch extension"], answer: "The beginning, middle, and end of your story" },
-        { question: "What happens when you use the block: when green flag clicked?", choices: ["The project ends", "The character says goodbye", "The story starts or code begins", "You log out"], answer: "The story starts or code begins" },
-        { question: "Which of the following is NOT a story element?", choices: ["Character", "Plot", "Backdrop", "Setting"], answer: "Backdrop" }
+        { question: "Which file extension is commonly used for an HTML file?", choices: [".txt", ".docx", ".html", ".css"], answer: ".html" },
+        { question: "What is the correct boilerplate code to start an HTML document?", choices: ["<doc html>", "<html><head></head><body></body></html>", "<html start>", "<htmlpage>"], answer: "<html><head></head><body></body></html>" },
+        { question: "Which declaration tells the browser that a document is HTML5?", choices: ["<doctype=5>", "<!DOCTYPE html>", "<html5>", "<doctype html5>"], answer: "<!DOCTYPE html>" },
+        { question: "In HTML, which of the following is an element?", choices: ["<p>", "class", "id", "style=\"color:red;\""], answer: "<p>" },
+        { question: "What is an attribute in HTML?", choices: ["The visible text inside an element", "Extra information added to an element inside the opening tag", "A type of heading", "The closing part of an element"], answer: "Extra information added to an element inside the opening tag" },
+        { question: "Which HTML tag is used for the largest heading?", choices: ["<h6>", "<h3>", "<h1>", "<heading>"], answer: "<h1>" },
+        { question: "Which tag is used to define a paragraph in HTML?", choices: ["<par>", "<p>", "<para>", "<text>"], answer: "<p>" },
+        { question: "What is the difference between an opening tag and a closing tag?", choices: ["Opening tag has /, closing tag does not", "Closing tag has /, opening tag does not", "Both have /", "Neither has /"], answer: "Closing tag has /, opening tag does not" },
+        { question: "In HTML, what is the 'value'?", choices: ["The text inside the body", "The data given to an attribute", "The name of a tag", "The number of elements on the page"], answer: "The data given to an attribute" },
+        { question: "In HTML, what is 'content'?", choices: ["The text or elements placed between opening and closing tags", "The CSS style rules", "The name of the file", "The attributes inside a tag"], answer: "The text or elements placed between opening and closing tags" },
+        { question: "Which of the following is an example of a void (empty) element in HTML?", choices: ["<p>", "<h1>", "<br>", "<div>"], answer: "<br>" },
+        { question: "Where should the <title> tag be placed in an HTML document?", choices: ["Inside <body>", "Inside <head>", "At the very bottom of the page", "Before <!DOCTYPE html>"], answer: "Inside <head>" },
+        { question: "Which of the following is the correct way to add an attribute to a tag?", choices: ["<p class=\"intro\">Hello</p>", "<p class.intro>Hello</p>", "<p:class=intro>Hello</p>", "<p class-intro>Hello</p>"], answer: "<p class=\"intro\">Hello</p>" },
+        { question: "What does <body> represent in an HTML document?", choices: ["Metadata about the webpage", "The visible content shown in the browser", "The CSS stylesheet", "The JavaScript code"], answer: "The visible content shown in the browser" },
+        { question: "Which HTML element is used to insert a line break?", choices: ["<break>", "<lb>", "<br>", "<line>"], answer: "<br>" },
+        { question: "Which tag is used to create the smallest heading in HTML?", choices: ["<heading>", "<h6>", "<h1>", "<head>"], answer: "<h6>" },
+        { question: "What attribute is required inside the <img> tag to make a image work?", choices: ["src", "href", "alt", "title"], answer: "src" },
+        { question: "Which HTML tag is used to create a hyperlink?", choices: ["<link>", "<href>", "<a>", "<url>"], answer: "<a>" },
+        { question: "What attribute is required inside the <a> tag to make a link work?", choices: ["src", "href", "alt", "title"], answer: "href" },
+        { question: "Which HTML tag is used to display an image?", choices: ["<pic>", "<img>", "<image>", "<src>"], answer: "<img>" }
     ];
 
     for (const q of rawQuestions) {
