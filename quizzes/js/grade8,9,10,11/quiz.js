@@ -14,11 +14,6 @@ let studentAnswers = [];
 let studentData = {};
 let questions = [];
 
-// ✅ Auto-detect grade from file name (e.g., grade3.html → Grade 3)
-const currentPage = window.location.pathname;
-const matchGrade = currentPage.match(/grade(\d+)/i);
-const detectedGrade = matchGrade ? `Grade ${matchGrade[1]}` : "Unknown Grade";
-
 // Hashing function
 async function hashString(str) {
     const encoder = new TextEncoder();
@@ -61,29 +56,40 @@ async function initQuestions() {
 // Show question
 function showQuestion(index) {
     const q = questions[index];
+
+    // Clear the container
     quizContent.innerHTML = "";
 
+    // Question text
     const questionP = document.createElement("p");
-    questionP.innerHTML = `<strong>Question ${index + 1}:</strong> ${q.question}`;
+    questionP.innerHTML = `<strong>Question ${index + 1}:</strong> `;
+    const questionText = document.createTextNode(q.question);
+    questionP.appendChild(questionText);
     quizContent.appendChild(questionP);
 
+    // Choices
     const choicesDiv = document.createElement("div");
     choicesDiv.className = "choices";
 
     q.choices.forEach((choice, i) => {
         const label = document.createElement("label");
+
         const input = document.createElement("input");
         input.type = "radio";
         input.name = `question${index}`;
         input.value = i;
         if (studentAnswers[index] == i) input.checked = true;
 
+        const choiceText = document.createTextNode(choice);
+
         label.appendChild(input);
-        label.appendChild(document.createTextNode(choice));
+        label.appendChild(choiceText);
+
         choicesDiv.appendChild(label);
     });
 
     quizContent.appendChild(choicesDiv);
+
     prevBtn.classList.remove("hidden");
     nextBtn.textContent = (index === questions.length - 1) ? "Submit" : "Next";
 }
@@ -94,7 +100,7 @@ function saveAnswer() {
     studentAnswers[currentQuestion] = selected ? parseInt(selected.value) : null;
 }
 
-// Calculate score
+// Calculate score using hashed answers
 async function calculateScore() {
     let score = 0;
     for (let i = 0; i < questions.length; i++) {
@@ -112,8 +118,7 @@ studentForm.addEventListener("submit", async function (e) {
     e.preventDefault();
     studentData = {
         name: document.getElementById("studentName").value.trim(),
-        gender: document.getElementById("studentGender").value,
-        grade: detectedGrade  // ✅ Automatically included grade
+        gender: document.getElementById("studentGender").value
     };
     historyTable.style.display = "none";
     showHistoryBtn.textContent = "Submit History";
@@ -172,13 +177,8 @@ showHistoryBtn.addEventListener("click", () => {
         historyBody.innerHTML = "";
         results.forEach((r, index) => {
             const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${r.name}</td>
-                <td>${r.gender}</td>
-                <td>${r.grade || "Unknown"}</td>
-                <td>${r.score}</td>
-                <td class="action-col"><button class="deleteBtn" data-index="${index}">Delete</button></td>
-            `;
+            row.innerHTML = `<td>${r.name}</td><td>${r.gender}</td><td>${r.score}</td>
+            <td class="action-col"><button class="deleteBtn" data-index="${index}">Delete</button></td>`;
             historyBody.appendChild(row);
         });
         historyTable.style.display = "table";
@@ -221,11 +221,38 @@ quizContainer.addEventListener("keydown", (e) => {
 });
 
 // Disable right-click
-document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+    // alert("Right-click is disabled on this page!");
+});
 
 // Disable common DevTools shortcuts
-document.addEventListener("keydown", (e) => {
+document.addEventListener("keydown", function (e) {
+    // F12
     if (e.key === "F12") e.preventDefault();
-    if (e.ctrlKey && e.shiftKey && ["i", "j", "c"].includes(e.key.toLowerCase())) e.preventDefault();
+    // Ctrl+Shift+I
+    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "i") e.preventDefault();
+    // Ctrl+Shift+J
+    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "j") e.preventDefault();
+    // Ctrl+U (view source)
     if (e.ctrlKey && e.key.toLowerCase() === "u") e.preventDefault();
+    // Ctrl+Shift+C (inspect element)
+    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "c") e.preventDefault();
 });
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function escapeHTML(str) {
+    return str.replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+

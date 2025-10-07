@@ -70,6 +70,14 @@
       border-color: #ff6b6b;
   }
 
+  /* 🔥 Highlight the label when its radio is checked */
+  .choices input[type="radio"]:checked+label,
+  .choices label:has(input[type="radio"]:checked) {
+      background: #ffecec;
+      border-color: #ff6b6b;
+      box-shadow: 0 0 6px rgba(255, 107, 107, 0.4);
+  }
+
   .btns {
       margin-top: 20px;
       display: flex;
