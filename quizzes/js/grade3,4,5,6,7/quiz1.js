@@ -30,11 +30,36 @@ async function hashString(str) {
 // Initialize questions with hashed answers
 async function initQuestions() {
     const rawQuestions = [
-        { question: "Which of the following is a good example of a character?", choices: ["A Mountain", "A Dancing Robot", "A Green Background", "A Code Block"], answer: "A Dancing Robot" },
-        { question: "What is the first step when starting a story project in Scratch?", choices: ["Finish your quiz", "Choose a sprite and a backdrop", "Add sound", "Share your project"], answer: "Choose a sprite and a backdrop" },
-        { question: "Which of the following best describes a “plot”?", choices: ["A colorful costume", "The place where your story happens", "The beginning, middle, and end of your story", "A Scratch extension"], answer: "The beginning, middle, and end of your story" },
-        { question: "What happens when you use the block: when green flag clicked?", choices: ["The project ends", "The character says goodbye", "The story starts or code begins", "You log out"], answer: "The story starts or code begins" },
-        { question: "Which of the following is NOT a story element?", choices: ["Character", "Plot", "Backdrop", "Setting"], answer: "Backdrop" }
+        {
+            question: "Which of the following is a good example of a character?",
+            choices: ["A Mountain", "A Dancing Robot", "A Green Background", "A Code Block"],
+            answer: "A Dancing Robot"
+            // image: "../images/grade2/music.png" // ✅ optional
+        },
+        {
+            question: "What is the first step when starting a story project in Scratch?",
+            choices: ["Finish your quiz", "Choose a sprite and a backdrop", "Add sound", "Share your project"],
+            answer: "Choose a sprite and a backdrop"
+            // image: "../images/grade2/call.png" // ✅ optional
+        },
+        {
+            question: "Which of the following best describes a “plot”?",
+            choices: ["A colorful costume", "The place where your story happens", "The beginning, middle, and end of your story", "A Scratch extension"],
+            answer: "The beginning, middle, and end of your story"
+            // image: "../images/grade2/typing.png" // ✅ optional
+        },
+        {
+            question: "What happens when you use the block: when green flag clicked?",
+            choices: ["The project ends", "The character says goodbye", "The story starts or code begins", "You log out"],
+            answer: "The story starts or code begins"
+            // image: "../images/grade2/game.png" // ✅ optional
+        },
+        {
+            question: "Which of the following is NOT a story element?",
+            choices: ["Character", "Plot", "Backdrop", "Setting"],
+            answer: "Backdrop"
+            // image: "../images/grade2/game.png" // ✅ optional
+        },
     ];
 
     for (const q of rawQuestions) {
@@ -43,28 +68,56 @@ async function initQuestions() {
     }
 }
 
-// Show question
+// Helper function to safely escape HTML special characters
+function escapeHTML(str) {
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 function showQuestion(index) {
     const q = questions[index];
     quizContent.innerHTML = "";
 
+    // Escape special characters in question text
     const questionP = document.createElement("p");
-    questionP.innerHTML = `<strong>Question ${index + 1}:</strong> ${q.question}`;
+    questionP.innerHTML = `<strong>Question ${index + 1}:</strong> ${escapeHTML(q.question)}`;
     quizContent.appendChild(questionP);
+
+    // ✅ Add image if available
+    if (q.image) {
+        const img = document.createElement("img");
+        img.src = q.image;
+        img.alt = "Question image";
+        img.style.maxWidth = "300px";
+        img.style.display = "block";
+        img.style.margin = "10px auto";
+        quizContent.appendChild(img);
+    }
+
+    // ✅ Make a copy of the choices and shuffle them
+    const shuffledChoices = [...q.choices].sort(() => Math.random() - 0.5);
 
     const choicesDiv = document.createElement("div");
     choicesDiv.className = "choices";
 
-    q.choices.forEach((choice, i) => {
+    shuffledChoices.forEach((choice, i) => {
         const label = document.createElement("label");
         const input = document.createElement("input");
         input.type = "radio";
         input.name = `question${index}`;
-        input.value = i;
-        if (studentAnswers[index] == i) input.checked = true;
+        input.value = choice; // ✅ Store choice text instead of index
 
+        // If previously selected, restore checked state
+        if (studentAnswers[index] === choice) input.checked = true;
+
+        const choiceText = document.createTextNode(choice);
         label.appendChild(input);
-        label.appendChild(document.createTextNode(choice));
+        label.appendChild(choiceText);
+
         choicesDiv.appendChild(label);
     });
 
@@ -76,16 +129,15 @@ function showQuestion(index) {
 // Save answer
 function saveAnswer() {
     const selected = document.querySelector(`input[name="question${currentQuestion}"]:checked`);
-    studentAnswers[currentQuestion] = selected ? parseInt(selected.value) : null;
+    studentAnswers[currentQuestion] = selected ? selected.value : null;
 }
 
 // Calculate score
 async function calculateScore() {
     let score = 0;
     for (let i = 0; i < questions.length; i++) {
-        const selectedIndex = studentAnswers[i];
-        if (selectedIndex === null || selectedIndex === undefined) continue;
-        const selectedChoice = questions[i].choices[selectedIndex];
+        const selectedChoice = studentAnswers[i];
+        if (!selectedChoice) continue;
         const hashedChoice = await hashString(selectedChoice);
         if (hashedChoice === questions[i].hashedAnswer) score++;
     }

@@ -14,6 +14,11 @@ let studentAnswers = [];
 let studentData = {};
 let questions = [];
 
+// ✅ Auto-detect grade from file name (e.g., grade3.html → Grade 3)
+const currentPage = window.location.pathname;
+const matchGrade = currentPage.match(/grade(\d+)/i);
+const detectedGrade = matchGrade ? `Grade ${matchGrade[1]}` : "Unknown Grade";
+
 // Hashing function
 async function hashString(str) {
     const encoder = new TextEncoder();
@@ -25,26 +30,66 @@ async function hashString(str) {
 // Initialize questions with hashed answers
 async function initQuestions() {
     const rawQuestions = [
-        { question: "Which file extension is commonly used for an HTML file?", choices: [".txt", ".docx", ".html", ".css"], answer: ".html" },
-        { question: "What is the correct boilerplate code to start an HTML document?", choices: ["<doc html>", "<html><head></head><body></body></html>", "<html start>", "<htmlpage>"], answer: "<html><head></head><body></body></html>" },
-        { question: "Which declaration tells the browser that a document is HTML5?", choices: ["<doctype=5>", "<!DOCTYPE html>", "<html5>", "<doctype html5>"], answer: "<!DOCTYPE html>" },
-        { question: "In HTML, which of the following is an element?", choices: ["<p>", "class", "id", "style=\"color:red;\""], answer: "<p>" },
-        { question: "What is an attribute in HTML?", choices: ["The visible text inside an element", "Extra information added to an element inside the opening tag", "A type of heading", "The closing part of an element"], answer: "Extra information added to an element inside the opening tag" },
-        { question: "Which HTML tag is used for the largest heading?", choices: ["<h6>", "<h3>", "<h1>", "<heading>"], answer: "<h1>" },
-        { question: "Which tag is used to define a paragraph in HTML?", choices: ["<par>", "<p>", "<para>", "<text>"], answer: "<p>" },
-        { question: "What is the difference between an opening tag and a closing tag?", choices: ["Opening tag has /, closing tag does not", "Closing tag has /, opening tag does not", "Both have /", "Neither has /"], answer: "Closing tag has /, opening tag does not" },
-        { question: "In HTML, what is the 'value'?", choices: ["The text inside the body", "The data given to an attribute", "The name of a tag", "The number of elements on the page"], answer: "The data given to an attribute" },
-        { question: "In HTML, what is 'content'?", choices: ["The text or elements placed between opening and closing tags", "The CSS style rules", "The name of the file", "The attributes inside a tag"], answer: "The text or elements placed between opening and closing tags" },
-        { question: "Which of the following is an example of a void (empty) element in HTML?", choices: ["<p>", "<h1>", "<br>", "<div>"], answer: "<br>" },
-        { question: "Where should the <title> tag be placed in an HTML document?", choices: ["Inside <body>", "Inside <head>", "At the very bottom of the page", "Before <!DOCTYPE html>"], answer: "Inside <head>" },
-        { question: "Which of the following is the correct way to add an attribute to a tag?", choices: ["<p class=\"intro\">Hello</p>", "<p class.intro>Hello</p>", "<p:class=intro>Hello</p>", "<p class-intro>Hello</p>"], answer: "<p class=\"intro\">Hello</p>" },
-        { question: "What does <body> represent in an HTML document?", choices: ["Metadata about the webpage", "The visible content shown in the browser", "The CSS stylesheet", "The JavaScript code"], answer: "The visible content shown in the browser" },
-        { question: "Which HTML element is used to insert a line break?", choices: ["<break>", "<lb>", "<br>", "<line>"], answer: "<br>" },
-        { question: "Which tag is used to create the smallest heading in HTML?", choices: ["<heading>", "<h6>", "<h1>", "<head>"], answer: "<h6>" },
-        { question: "What attribute is required inside the <img> tag to make a image work?", choices: ["src", "href", "alt", "title"], answer: "src" },
-        { question: "Which HTML tag is used to create a hyperlink?", choices: ["<link>", "<href>", "<a>", "<url>"], answer: "<a>" },
-        { question: "What attribute is required inside the <a> tag to make a link work?", choices: ["src", "href", "alt", "title"], answer: "href" },
-        { question: "Which HTML tag is used to display an image?", choices: ["<pic>", "<img>", "<image>", "<src>"], answer: "<img>" }
+        {
+            question: "What is this?",
+            choices: ["Music", "Call", "Typing", "Game"],
+            answer: "Music",
+            image: "../images/grade2/music.png" // ✅ optional
+        },
+        {
+            question: "What is this?",
+            choices: ["Music", "Call", "Typing", "Game"],
+            answer: "Call",
+            image: "../images/grade2/call.png" // ✅ optional
+        },
+        {
+            question: "What is this?",
+            choices: ["Music", "Call", "Typing", "Game"],
+            answer: "Typing",
+            image: "../images/grade2/typing.png" // ✅ optional
+        },
+        {
+            question: "What is this?",
+            choices: ["Music", "Call", "Typing", "Game"],
+            answer: "Game",
+            image: "../images/grade2/game.png" // ✅ optional
+        },
+        {
+            question: "What is this?",
+            choices: ["Monitor", "Computer"],
+            answer: "Computer",
+            image: "../images/grade2/computer.png" // ✅ optional
+        },
+        {
+            question: "What is this?",
+            choices: ["Mouse", "Keyboard"],
+            answer: "Keyboard",
+            image: "../images/grade2/keyboard.png" // ✅ optional
+        },
+        {
+            question: "What is this?",
+            choices: ["Monitor", "Computer"],
+            answer: "Monitor",
+            image: "../images/grade2/monitor.png" // ✅ optional
+        },        
+        {
+            question: "What is this?",
+            choices: ["CPU", "System Unit"],
+            answer: "CPU",
+            image: "../images/grade2/cpu.png" // ✅ optional
+        },        
+        {
+            question: "What is this?",
+            choices: ["Mouse", "Keyboard"],
+            answer: "Mouse",
+            image: "../images/grade2/mouse.png" // ✅ optional
+        },
+                {
+            question: "What is this?",
+            choices: ["CPU", "System Unit"],
+            answer: "System Unit",
+            image: "../images/grade2/systemUnit.png" // ✅ optional
+        }
     ];
 
     for (const q of rawQuestions) {
@@ -53,35 +98,53 @@ async function initQuestions() {
     }
 }
 
-// Show question
+// Helper function to safely escape HTML special characters
+function escapeHTML(str) {
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 function showQuestion(index) {
     const q = questions[index];
-
-    // Clear the container
     quizContent.innerHTML = "";
 
-    // Question text
+    // Escape special characters in question text
     const questionP = document.createElement("p");
-    questionP.innerHTML = `<strong>Question ${index + 1}:</strong> `;
-    const questionText = document.createTextNode(q.question);
-    questionP.appendChild(questionText);
+    questionP.innerHTML = `<strong>Question ${index + 1}:</strong> ${escapeHTML(q.question)}`;
     quizContent.appendChild(questionP);
 
-    // Choices
+    // ✅ Add image if available
+    if (q.image) {
+        const img = document.createElement("img");
+        img.src = q.image;
+        img.alt = "Question image";
+        img.style.maxWidth = "300px";
+        img.style.display = "block";
+        img.style.margin = "10px auto";
+        quizContent.appendChild(img);
+    }
+
+    // ✅ Make a copy of the choices and shuffle them
+    const shuffledChoices = [...q.choices].sort(() => Math.random() - 0.5);
+
     const choicesDiv = document.createElement("div");
     choicesDiv.className = "choices";
 
-    q.choices.forEach((choice, i) => {
+    shuffledChoices.forEach((choice, i) => {
         const label = document.createElement("label");
-
         const input = document.createElement("input");
         input.type = "radio";
         input.name = `question${index}`;
-        input.value = i;
-        if (studentAnswers[index] == i) input.checked = true;
+        input.value = choice; // ✅ Store choice text instead of index
+
+        // If previously selected, restore checked state
+        if (studentAnswers[index] === choice) input.checked = true;
 
         const choiceText = document.createTextNode(choice);
-
         label.appendChild(input);
         label.appendChild(choiceText);
 
@@ -89,7 +152,6 @@ function showQuestion(index) {
     });
 
     quizContent.appendChild(choicesDiv);
-
     prevBtn.classList.remove("hidden");
     nextBtn.textContent = (index === questions.length - 1) ? "Submit" : "Next";
 }
@@ -97,16 +159,15 @@ function showQuestion(index) {
 // Save answer
 function saveAnswer() {
     const selected = document.querySelector(`input[name="question${currentQuestion}"]:checked`);
-    studentAnswers[currentQuestion] = selected ? parseInt(selected.value) : null;
+    studentAnswers[currentQuestion] = selected ? selected.value : null;
 }
 
-// Calculate score using hashed answers
+// Calculate score
 async function calculateScore() {
     let score = 0;
     for (let i = 0; i < questions.length; i++) {
-        const selectedIndex = studentAnswers[i];
-        if (selectedIndex === null || selectedIndex === undefined) continue;
-        const selectedChoice = questions[i].choices[selectedIndex];
+        const selectedChoice = studentAnswers[i];
+        if (!selectedChoice) continue;
         const hashedChoice = await hashString(selectedChoice);
         if (hashedChoice === questions[i].hashedAnswer) score++;
     }
@@ -118,7 +179,8 @@ studentForm.addEventListener("submit", async function (e) {
     e.preventDefault();
     studentData = {
         name: document.getElementById("studentName").value.trim(),
-        gender: document.getElementById("studentGender").value
+        gender: document.getElementById("studentGender").value,
+        grade: detectedGrade  // ✅ Automatically included grade
     };
     historyTable.style.display = "none";
     showHistoryBtn.textContent = "Submit History";
@@ -177,8 +239,13 @@ showHistoryBtn.addEventListener("click", () => {
         historyBody.innerHTML = "";
         results.forEach((r, index) => {
             const row = document.createElement("tr");
-            row.innerHTML = `<td>${r.name}</td><td>${r.gender}</td><td>${r.score}</td>
-            <td class="action-col"><button class="deleteBtn" data-index="${index}">Delete</button></td>`;
+            row.innerHTML = `
+                <td>${r.name}</td>
+                <td>${r.gender}</td>
+                <td>${r.grade || "Unknown"}</td>
+                <td>${r.score}</td>
+                <td class="action-col"><button class="deleteBtn" data-index="${index}">Delete</button></td>
+            `;
             historyBody.appendChild(row);
         });
         historyTable.style.display = "table";
@@ -221,38 +288,11 @@ quizContainer.addEventListener("keydown", (e) => {
 });
 
 // Disable right-click
-document.addEventListener("contextmenu", function (e) {
-    e.preventDefault();
-    // alert("Right-click is disabled on this page!");
-});
+document.addEventListener("contextmenu", e => e.preventDefault());
 
 // Disable common DevTools shortcuts
-document.addEventListener("keydown", function (e) {
-    // F12
+document.addEventListener("keydown", (e) => {
     if (e.key === "F12") e.preventDefault();
-    // Ctrl+Shift+I
-    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "i") e.preventDefault();
-    // Ctrl+Shift+J
-    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "j") e.preventDefault();
-    // Ctrl+U (view source)
+    if (e.ctrlKey && e.shiftKey && ["i", "j", "c"].includes(e.key.toLowerCase())) e.preventDefault();
     if (e.ctrlKey && e.key.toLowerCase() === "u") e.preventDefault();
-    // Ctrl+Shift+C (inspect element)
-    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "c") e.preventDefault();
 });
-
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
-
-function escapeHTML(str) {
-    return str.replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
